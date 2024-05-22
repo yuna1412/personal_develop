@@ -4,35 +4,40 @@ import { useNavigate } from 'react-router-dom';
 function LoginForm({ onSignIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // useNavigateフックを使って遷移処理を行う
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // ユーザー名とパスワードが空でない場合のみ処理を続行
+
     if (!username || !password) {
       alert('ユーザー名またはパスワードが入力されていません');
       return;
     }
+
     try {
-      const response = await fetch('http://localhost:8080/users/add', {
+      const response = await fetch('http://localhost:8080/users/find?find=' + username, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
+        }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to add user');
+        throw new Error('Failed to find user');
       }
 
-      console.log('ユーザーが追加されました');
-      onSignIn(username); // ユーザーが追加されたら、親コンポーネントにusernameを渡す
+      const userData = await response.json();
+      if (userData.length === 0 || userData[0].password !== password) {
+        throw new Error('Invalid username or password');
+      }
+
+      onSignIn(username);
       setUsername('');
       setPassword('');
-      navigate('/AccountPage'); // ユーザーが追加された後、AccountPageに遷移する
+      navigate('/AccountPage');
     } catch (error) {
       console.error('エラー:', error.message);
+      alert('ログインに失敗しました: ' + error.message);
     }
   };
 
