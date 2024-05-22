@@ -1,44 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function LoginForm({ onSignIn }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!username || !password) {
-      alert('ユーザー名またはパスワードが入力されていません');
+      setError('ユーザー名またはパスワードが入力されていません');
       return;
     }
 
+    console.log(username);
+    console.log(password);
+
+    setLoading(true);
+
     try {
-      const response = await fetch('http://localhost:8080/users/find?find=' + username, {
+      const response = await fetch('http://localhost:8080/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ username, password })
       });
 
+      console.log(response);
+
       if (!response.ok) {
-        throw new Error('Failed to find user');
+        throw new Error('そのアカウントは存在しません');
       }
-
       const userData = await response.json();
-      if (userData.length === 0 || userData[0].password !== password) {
-        throw new Error('Invalid username or password');
-      }
-
+      console.log('ログインに成功しました:', userData);
       onSignIn(username);
       setUsername('');
       setPassword('');
       navigate('/AccountPage');
     } catch (error) {
-      console.error('エラー:', error.message);
-      alert('ログインに失敗しました: ' + error.message);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  useEffect(() => {
+    setError(null);
+  }, [username, password]); // 入力が変更されるたびにエラーをクリア
+
+  const handleLogout = () => {
+    navigate("/");
   };
 
   return (
@@ -63,7 +78,11 @@ function LoginForm({ onSignIn }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button type="submit">ログイン</button>
+        <button onClick={handleLogout}>新規登録</button>
+        <button type="submit" disabled={loading}>
+          {loading ? '処理中...' : 'ログイン'}
+        </button>
+        {error && <p>{error}</p>}
       </form>
     </div>
   );

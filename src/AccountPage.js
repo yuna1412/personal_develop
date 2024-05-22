@@ -27,9 +27,14 @@ function AccountPage({ signedInUsername, onDeleteAccount }) {
     }
   };
 
+  const handleLogout = () => {
+    navigate("/");
+  };
+
   return (
     <div>
-      <h3>サインイン中: {signedInUsername}</h3>
+      <h3>ログイン中: {signedInUsername}</h3>
+      <button onClick={handleLogout}>ログアウト</button>
       {confirmDelete ? (
         <div>
           <p>本当にアカウントを削除しますか？</p>

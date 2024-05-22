@@ -36,6 +36,10 @@ function SigninForm({ onSignIn }) {
     }
   };
 
+  const handleLogout = () => {
+    navigate("/LoginForm");
+  };
+
   return (
     <div>
       <h2>新規登録</h2>
@@ -59,6 +63,7 @@ function SigninForm({ onSignIn }) {
           />
         </div>
         <button type="submit">登録</button>
+        <button onClick={handleLogout}>ログイン</button>
       </form>
     </div>
   );
