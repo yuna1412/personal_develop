@@ -78,7 +78,7 @@ function LoginForm({ onSignIn }) {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <button onClick={handleLogout}>新規登録</button>
+        <button onClick={handleLogout}>新規登録ページ</button>
         <button type="submit" disabled={loading}>
           {loading ? '処理中...' : 'ログイン'}
         </button>

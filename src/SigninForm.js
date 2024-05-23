@@ -63,7 +63,7 @@ function SigninForm({ onSignIn }) {
           />
         </div>
         <button type="submit">登録</button>
-        <button onClick={handleLogout}>ログイン</button>
+        <button onClick={handleLogout}>ログインページ</button>
       </form>
     </div>
   );

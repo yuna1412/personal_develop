@@ -29,7 +29,7 @@ function App() {
             />
             <Route 
               path="/LoginForm" 
-              element={<LoginForm signedInUsername={signedInUsername} onDeleteAccount={handleDeleteAccount} />} // signedInUsernameとonDeleteAccountを渡す
+              element={<LoginForm signedInUsername={signedInUsername} onDeleteAccount={handleDeleteAccount} onSignIn={handleSignIn}/>} // signedInUsernameとonDeleteAccountを渡す
             />
             <Route 
               path="/AccountPage" 
